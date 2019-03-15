@@ -96,11 +96,11 @@ parser = function(obj, lines, index, kwEnd, callback){
         kwEnd.push(tmp);
     }
 
-    while (!contains(lines[i], (kwEnd))) {
+    while (lines[i]!=undefined && !contains(lines[i], (kwEnd))) {
         obj = callback(obj, lines[i++]);
     }
 
-    return [obj, i]
+    return [obj, --i]
 }
 
 parseTuple = function (lines, index, kwEnd) {
@@ -153,7 +153,7 @@ parse = function(md){
         }
         if (doclines[i].includes("Problématique")) {
             [doc.pb, i] = parseTuple(doclines, i, "Généralisation");
-        }
+        }   
         if (doclines[i].includes("Généralisation")) {
             [doc.generalisataion, i] = parseString(doclines, i, 
                 ["Pistes de solution", "Hypothèse"]);
@@ -171,19 +171,21 @@ parse = function(md){
     return doc;
 };
 
-// mammoth.convertToMarkdown({ path: 'Prosit_01_-_Cauchemar_a_lhopital_-_Aller.docx' })
+// mammoth.convertToMarkdown({ path: 'Prosit_03_-_ERP_aller.docx' })
 //     .then(async function (result) {
 //         var md = result.value;
-//         md = md.replace(/<a .*<\/a>/gm, "");
+//         md = md.replace(/<a [^<]*<\/a>/gm, "");
 //         md = md.replace(/\[.*\]\(#.*\)/gm, "");
 //         md = md.replace(/!\[\]\(.*\)/gm, "");
 //         md = md.replace(/^\n/gm, "");
 //         md = md.replace(/\\/, "");
 //         var doc = parse(md);
 
-//         var res = doc.clean().format();
+//         doc.clean();
+//         var res = doc.format();
         
 //         var markdownFile = 'file.md';
+//         var markdownFile2 = 'file_kw.md';
 
 //         fs.writeFile(markdownFile, res, function (err) {
 //             if (err) {
@@ -193,7 +195,16 @@ parse = function(md){
 //             console.log("The file was saved!");
 //         }); 
 
-//         doc.searchKw(() => console.log('everything done'));
+//         doc.searchKw(() => {
+//             console.log('everything done')
+//             fs.writeFile(markdownFile2, doc.format(), function (err) {
+//                 if (err) {
+//                     return console.log(err);
+//                 }
+
+//                 console.log("The file was saved!");
+//             }); 
+//         });
         
 //         console.log("done!");
 //     });

@@ -7,10 +7,11 @@ cleanString = function(str){
     str = str.replace(":", "");
     str = str.replace("-", "");
     str = str.replace(/[0-9]\./g, "");
+    str = str.replace(/\\/g, "");
     str = str.trim();
     var dec = 0;
     //remove all symboles on extremities
-    while (str[dec] == str[str.length - 1 - dec]
+    while (str && str[dec] == str[str.length - 1 - dec]
         && (str[dec].charCodeAt() < 65
             || ((str[dec].charCodeAt() > 90) && (str[dec].charCodeAt() < 97))
             || (str[dec].charCodeAt() > 122))) {
@@ -79,10 +80,10 @@ class Doc {
     format(){
         var str = "# " + this.title + '\n\n';
 
-        str += "Animateur : " + this.animateur + '\n';
-        str += "Secrétaire : " + this.secretaire + '\n';
-        str += "Scribe : " + this.scribe + '\n';
-        str += "Gestionnaire : " + this.gestionaire + '\n\n';
+        str += "* Animateur : " + this.animateur + '\n';
+        str += "* Secrétaire : " + this.secretaire + '\n';
+        str += "* Scribe : " + this.scribe + '\n';
+        str += "* Gestionnaire : " + this.gestionaire + '\n\n';
 
         if (this.obj && this.obj != ''){
             str += "## Objectifs d'apprentissage\n\n";
@@ -95,6 +96,10 @@ class Doc {
             "Mots clé", 
             "- **{key}** : {val}");
         
+        str += "## Contexte\n\n";
+        str += this.context;
+        str += '\n';
+
         str += formatList(this.contrainte.tuple,
             "Contrainte",
             "Contraintes",
@@ -107,7 +112,7 @@ class Doc {
 
         str += "## Généralisation\n\n";
         str += this.generalisataion;
-        str += '\n\n';
+        str += '\n';
 
         str += formatList(this.pds.tuple,
             "Piste de solution",
