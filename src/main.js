@@ -37,6 +37,9 @@ client.on('message', msg => {
             mammoth.convertToMarkdown({ path: filename })
                 .then(function (result) {
                     var md = result.value;
+                    // Un G parceque lol mdr 
+                    // Il y a deux balise <a> et ca bug
+                    md = md.replace(/<a .*<\/a>G/gm, "");
                     md = md.replace(/<a .*<\/a>/gm, "");
                     md = md.replace(/\[.*\]\(#.*\)/gm, "");
                     md = md.replace(/!\[\]\(.*\)/gm, "");
@@ -139,11 +142,11 @@ parse = function(md){
         if(doclines[i].includes("Scribe"))
             doc.gestionaire = doclines[i].match(/: (.*?)__/)[1];
 
-        if(doclines[i].includes("Objectif d’apprentissage")){
-            [doc.obj, i] = parseString(doclines, i, "Mots clés");
+        if(doclines[i].includes("Objectifs d’apprentissage")){
+            [doc.obj, i] = parseString(doclines, i, ["Mots clés", "Mots-clés"]);
         }
-        if (doclines[i].includes("Mots clés")) {
-            [doc.keyword, i] = parseTuple(doclines, i, "Analyse du besoin");
+        if (doclines[i].includes("Mots clés") || doclines[i].includes("Mots-clés")) {
+            [doc.keyword, i] = parseTuple(doclines, i, ["Analyse du besoin", "Analyse des besoins"]);
         }
         if (doclines[i].includes("Context")) {
             [doc.context, i] = parseString(doclines, i, "Contrainte");
@@ -152,9 +155,9 @@ parse = function(md){
             [doc.contrainte, i] = parseTuple(doclines, i, "Problématique");
         }
         if (doclines[i].includes("Problématique")) {
-            [doc.pb, i] = parseTuple(doclines, i, "Généralisation");
+            [doc.pb, i] = parseTuple(doclines, i, "énéralisation");
         }   
-        if (doclines[i].includes("Généralisation")) {
+        if (doclines[i].includes("énéralisation")) {
             [doc.generalisataion, i] = parseString(doclines, i, 
                 ["Pistes de solution", "Hypothèse"]);
         }
@@ -170,42 +173,3 @@ parse = function(md){
 
     return doc;
 };
-
-// mammoth.convertToMarkdown({ path: 'Prosit_03_-_ERP_aller.docx' })
-//     .then(async function (result) {
-//         var md = result.value;
-//         md = md.replace(/<a [^<]*<\/a>/gm, "");
-//         md = md.replace(/\[.*\]\(#.*\)/gm, "");
-//         md = md.replace(/!\[\]\(.*\)/gm, "");
-//         md = md.replace(/^\n/gm, "");
-//         md = md.replace(/\\/, "");
-//         var doc = parse(md);
-
-//         doc.clean();
-//         var res = doc.format();
-        
-//         var markdownFile = 'file.md';
-//         var markdownFile2 = 'file_kw.md';
-
-//         fs.writeFile(markdownFile, res, function (err) {
-//             if (err) {
-//                 return console.log(err);
-//             }
-
-//             console.log("The file was saved!");
-//         }); 
-
-//         doc.searchKw(() => {
-//             console.log('everything done')
-//             fs.writeFile(markdownFile2, doc.format(), function (err) {
-//                 if (err) {
-//                     return console.log(err);
-//                 }
-
-//                 console.log("The file was saved!");
-//             }); 
-//         });
-        
-//         console.log("done!");
-//     });
-

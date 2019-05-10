@@ -121,7 +121,7 @@ class Doc {
 
         str += formatList(this.pa.tuple,
             "Plan d'action",
-            "Plans d'action",
+            "Plan d'action",
             "{key}");
 
         return str;
